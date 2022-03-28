@@ -10,3 +10,6 @@ jsonrpc-core = "18.0.0"
 jsonrpc-derive = "18.0.0"
 jsonrpc-http-server = "18.0.0"
 common = { path = "../common" }
+serde = "1.0.136"
+serde_derive = "1.0.136"
+nanoid = "0.4.0"

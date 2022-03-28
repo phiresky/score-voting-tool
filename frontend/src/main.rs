@@ -1,17 +1,25 @@
+use jsonrpc_core_client::transports::wasmhttp;
 use yew::prelude::*;
-mod api_client;
+
+pub async fn connect() -> common::ApiClient {
+    let (client, receiver_task) = wasmhttp::connect::<common::ApiClient>("http://localhost:3030/")
+        .await
+        .expect("shouldn't fail");
+    wasm_bindgen_futures::spawn_local(receiver_task);
+    client
+}
 
 #[function_component(App)]
 fn test_app() -> Html {
-    let videos = use_state(|| 0);
+    let sum = use_state(|| 0);
     {
-        let videos = videos.clone();
+        let sum = sum.clone();
         use_effect_with_deps(
             move |_| {
-                let videos = videos.clone();
+                let videos = sum.clone();
                 wasm_bindgen_futures::spawn_local(async move {
-                    let client = crate::api_client::connect().await;
-                    videos.set(client.add(1, 2).await.expect("NOP"));
+                    let client = connect().await; // todo: connect only once
+                    videos.set(client.add(1, 2).await.expect("todo: handle"));
                 });
                 || ()
             },
@@ -19,7 +27,7 @@ fn test_app() -> Html {
         );
     }
     html! {
-        <div>{"hello. result of 1 + 2 = "}{*videos}</div>
+        <div>{"hello. result of 1 + 2 = "}{*sum}</div>
     }
 }
 
