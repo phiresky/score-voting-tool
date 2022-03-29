@@ -242,7 +242,6 @@ async fn LoadViewPoll<G: Html>(cx: Scope<'_>, _poll_id: String) -> View<G> {
 
 #[component]
 fn ViewPoll<'a, G: Html>(cx: Scope<'a>, poll: PollV1) -> View<G> {
-    log::info!("creating new viewpoll");
     let options = View::new_fragment(
         poll.options
             .clone()
