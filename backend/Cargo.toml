@@ -1,15 +1,20 @@
 [package]
+edition = "2021"
 name = "backend"
 version = "0.1.0"
-edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+anyhow = "1.0.56"
+common = {path = "../common"}
 jsonrpc-core = "18.0.0"
 jsonrpc-derive = "18.0.0"
 jsonrpc-http-server = "18.0.0"
-common = { path = "../common" }
-serde = "1.0.136"
-serde_derive = "1.0.136"
 nanoid = "0.4.0"
+serde = "1.0.136"
+serde_cbor = "0.11.2"
+serde_derive = "1.0.136"
+serde_json = "1.0.79"
+sled = "0.34.7"
+structopt = "0.3.26"

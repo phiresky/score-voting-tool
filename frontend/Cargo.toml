@@ -1,16 +1,23 @@
 [package]
-name = "score-voting-tool"
-version = "0.1.0"
 edition = "2021"
+name = "frontend"
+version = "0.1.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-yew = "0.19"
-jsonrpc-core-client = {version="18.0.0", path="../../jsonrpc/core-client", features=["wasmhttp"]}
+common = {path = "../common"}
+console_error_panic_hook = "0.1.7"
 jsonrpc-core = "18.0.0"
-wasm-bindgen-futures = "0.4.29"
+jsonrpc-core-client = {version = "18.0.0", path = "../../jsonrpc/core-client", features = ["wasmhttp"]}
 jsonrpc-derive = "18.0.0"
-wasm-logger = "0.2.0"
 log = "0.4.14"
-common = { path = "../common" }
+sycamore = {git = "https://github.com/sycamore-rs/sycamore", features = ["suspense"]}
+sycamore-router = {git = "https://github.com/sycamore-rs/sycamore"}
+#sycamore = {path = "/tmp/16.24/sycamore/packages/sycamore"}
+#sycamore-router = {path = "/tmp/16.24/sycamore/packages/sycamore-router"}
+wasm-bindgen-futures = "0.4.29"
+wasm-logger = "0.2.0"
+web-sys = "0.3.56"
+
+[features]
