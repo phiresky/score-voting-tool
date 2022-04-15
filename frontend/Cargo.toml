@@ -8,7 +8,7 @@ version = "0.1.0"
 [dependencies]
 common = {path = "../common"}
 console_error_panic_hook = "0.1.7"
-jsonrpc-core = "18.0.0"
+jsonrpc-core = {version = "18.0.0", path = "../../jsonrpc/core"}
 jsonrpc-core-client = {version = "18.0.0", path = "../../jsonrpc/core-client", features = ["wasmhttp"]}
 jsonrpc-derive = "18.0.0"
 log = "0.4.14"

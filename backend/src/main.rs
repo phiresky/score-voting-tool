@@ -1,4 +1,4 @@
-use std::future;
+use std::{f32::consts::E, future};
 
 use anyhow::Context;
 use common::{CreatePoll, Poll, PollV1, PublicPollId, Rpc};
@@ -25,15 +25,23 @@ fn create_poll(db: &sled::Db, poll: CreatePoll) -> anyhow::Result<Poll> {
 }
 
 #[derive(Debug, Serialize)]
-pub struct OurError {}
+pub struct OurError {
+    // todo: better variants
+    msg: String,
+}
+
 impl From<OurError> for jsonrpc_core::Error {
-    fn from(_: OurError) -> Self {
-        todo!()
+    fn from(e: OurError) -> Self {
+        jsonrpc_core::Error {
+            code: jsonrpc_core::ErrorCode::ServerError(1),
+            message: e.msg,
+            data: None,
+        }
     }
 }
 impl From<anyhow::Error> for OurError {
     fn from(e: anyhow::Error) -> Self {
-        OurError {}
+        OurError { msg: e.to_string() }
     }
 }
 

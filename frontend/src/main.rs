@@ -1,10 +1,9 @@
+use std::collections::HashMap;
+
 use common::{CreatePoll, Poll, PollOption, PollOptionId, PollV1, PublicPollId};
-use jsonrpc_core_client::transports::wasmhttp;
-use sycamore::{
-    prelude::*,
-    rt::{Event, Reflect},
-};
-use sycamore_router::{navigate, HistoryIntegration, Route, Router, RouterProps};
+use jsonrpc_core_client::{transports::wasmhttp, RpcError};
+use sycamore::prelude::*;
+use sycamore_router::{navigate, HistoryIntegration, Route, Router};
 
 pub async fn connect() -> common::ApiClient {
     let (client, receiver_task) = wasmhttp::connect::<common::ApiClient>("http://localhost:3030/")
@@ -87,7 +86,7 @@ fn CreatePoll<G: Html>(cx: Scope) -> View<G> {
     let poll_description = create_signal(cx, String::new());
 
     let poll_options: RcSignal<Vec<EditPollOption>> = create_rc_signal(vec![EditPollOption {
-        id: create_rc_signal(1),
+        id: new_id(),
         title: create_rc_signal(String::new()),
     }]);
     let poll_op_ref = create_ref(cx, poll_options.clone());
@@ -230,6 +229,17 @@ async fn LoadViewPoll<G: Html>(cx: Scope<'_>, _poll_id: String) -> View<G> {
                 a(class="button is-info", href="/") { "Create a new poll" }
             }
         }
+        Err(RpcError::JsonRpcError(jsonrpc_core::types::error::Error {
+            code: jsonrpc_core::ErrorCode::ServerError(i),
+            message,
+            data,
+        })) => {
+            view! { cx,
+                div(class="notification is-danger") {
+                    "Could not load poll: "(message)" (E"(i)")"
+                }
+            }
+        }
         Err(e) => {
             view! { cx,
                 div(class="notification is-danger") {
@@ -240,17 +250,48 @@ async fn LoadViewPoll<G: Html>(cx: Scope<'_>, _poll_id: String) -> View<G> {
     }
 }
 
+#[derive(Prop)]
+struct VPOProps {
+    votes: RcSignal<HashMap<PollOptionId, i32>>,
+    option: PollOptionId,
+}
+#[component]
+fn VotePollOption<'a, G: Html>(cx: Scope<'a>, props: VPOProps) -> View<G> {
+    let op = View::new_fragment(
+        (0..=9)
+            .map(|e| {
+                let v = props.votes.clone();
+                let o = props.option.clone();
+                view! { cx, button(on:click=move |evt| {
+                    log::debug!("set vote: option={:?}, value={}", o, e);
+                    let mut x = v.modify();
+                    x.insert(o.clone(), e);
+                }) { (e) }}
+            })
+            .collect(),
+    );
+    view! {cx,
+        (op)
+    }
+}
 #[component]
 fn ViewPoll<'a, G: Html>(cx: Scope<'a>, poll: PollV1) -> View<G> {
+    let user_name = create_signal(cx, String::new());
+    let votes: RcSignal<HashMap<PollOptionId, i32>> = create_rc_signal(HashMap::new());
+
     let options = View::new_fragment(
         poll.options
             .clone()
             .into_iter()
             .map(|o| {
+                let votes = votes.clone();
+
                 view! { cx,
                     tr {
                         td { (o.title) }
-                        td { "0 1 2 3 4 5 6 7 8 9" }
+                        td {
+                            VotePollOption { votes, option: o.id.clone() }
+                        }
                     }
                 }
             })
@@ -261,6 +302,9 @@ fn ViewPoll<'a, G: Html>(cx: Scope<'a>, poll: PollV1) -> View<G> {
             h2(class="title is-2") {(poll.title)}
             div(class="subtitle is-3") {(poll.description_text_markdown)}
             (poll.votes.len()) " votes so far"
+            div {
+                "Your name: " input(bind:value=user_name) {}
+            }
             table(class="table") {
                 thead {
                     tr { td { "Option" } td { "Your vote" } }
