@@ -8,9 +8,9 @@ version = "0.1.0"
 [dependencies]
 anyhow = "1.0.56"
 common = {path = "../common"}
-jsonrpc-core = "18.0.0"
-jsonrpc-derive = "18.0.0"
-jsonrpc-http-server = "18.0.0"
+jsonrpc-core = {version = "18.0.0", path = "../../jsonrpc/core"}
+jsonrpc-derive = {version = "18.0.0", path = "../../jsonrpc/derive"}
+jsonrpc-http-server = {version = "18.0.0", path = "../../jsonrpc/http"}
 nanoid = "0.4.0"
 serde = "1.0.136"
 serde_cbor = "0.11.2"

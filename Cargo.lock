@@ -60,8 +60,8 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "common",
- "jsonrpc-core 18.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "jsonrpc-derive",
+ "jsonrpc-core",
+ "jsonrpc-derive 18.0.0",
  "jsonrpc-http-server",
  "nanoid",
  "serde",
@@ -136,9 +136,9 @@ dependencies = [
 name = "common"
 version = "0.1.0"
 dependencies = [
- "jsonrpc-core 18.0.0",
+ "jsonrpc-core",
  "jsonrpc-core-client",
- "jsonrpc-derive",
+ "jsonrpc-derive 18.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde",
  "serde_derive",
 ]
@@ -217,9 +217,9 @@ version = "0.1.0"
 dependencies = [
  "common",
  "console_error_panic_hook",
- "jsonrpc-core 18.0.0",
+ "jsonrpc-core",
  "jsonrpc-core-client",
- "jsonrpc-derive",
+ "jsonrpc-derive 18.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "log",
  "sycamore",
  "sycamore-router",
@@ -538,7 +538,7 @@ dependencies = [
  "derive_more",
  "futures 0.3.21",
  "gloo-net",
- "jsonrpc-core 18.0.0",
+ "jsonrpc-core",
  "jsonrpc-pubsub",
  "log",
  "serde",
@@ -548,21 +548,6 @@ dependencies = [
 [[package]]
 name = "jsonrpc-core"
 version = "18.0.0"
-dependencies = [
- "futures 0.3.21",
- "futures-executor",
- "futures-util",
- "log",
- "serde",
- "serde_derive",
- "serde_json",
-]
-
-[[package]]
-name = "jsonrpc-core"
-version = "18.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "14f7f76aef2d054868398427f6c54943cf3d1caa9a7ec7d0c38d69df97a965eb"
 dependencies = [
  "futures 0.3.21",
  "futures-executor",
@@ -584,6 +569,16 @@ dependencies = [
 [[package]]
 name = "jsonrpc-derive"
 version = "18.0.0"
+dependencies = [
+ "proc-macro-crate",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "jsonrpc-derive"
+version = "18.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5b939a78fa820cdfcb7ee7484466746a7377760970f6f9c6fe19f9edcc8a38d2"
 dependencies = [
@@ -596,12 +591,10 @@ dependencies = [
 [[package]]
 name = "jsonrpc-http-server"
 version = "18.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e1dea6e07251d9ce6a552abfb5d7ad6bc290a4596c8dcc3d795fae2bbdc1f3ff"
 dependencies = [
  "futures 0.3.21",
  "hyper",
- "jsonrpc-core 18.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "jsonrpc-core",
  "jsonrpc-server-utils",
  "log",
  "net2",
@@ -614,7 +607,7 @@ name = "jsonrpc-pubsub"
 version = "18.0.0"
 dependencies = [
  "futures 0.3.21",
- "jsonrpc-core 18.0.0",
+ "jsonrpc-core",
  "lazy_static",
  "log",
  "parking_lot",
@@ -625,13 +618,11 @@ dependencies = [
 [[package]]
 name = "jsonrpc-server-utils"
 version = "18.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fa4fdea130485b572c39a460d50888beb00afb3e35de23ccd7fad8ff19f0e0d4"
 dependencies = [
  "bytes",
  "futures 0.3.21",
  "globset",
- "jsonrpc-core 18.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "jsonrpc-core",
  "lazy_static",
  "log",
  "tokio",

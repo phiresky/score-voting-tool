@@ -8,12 +8,17 @@ use std::result::Result;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct PublicUserId(String);
+impl PublicUserId {
+    pub fn from_str(str: impl Into<String>) -> PublicUserId {
+        PublicUserId(str.into())
+    }
+}
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct PublicPollId(String);
 
 impl PublicPollId {
-    pub fn from_str(str: String) -> PublicPollId {
-        PublicPollId(str)
+    pub fn from_str(str: impl Into<String>) -> PublicPollId {
+        PublicPollId(str.into())
     }
     pub fn to_str(&self) -> &str {
         &self.0
@@ -34,6 +39,7 @@ pub struct PollV1 {
     pub description_text_markdown: String,
     pub options: Vec<PollOption>,
     pub votes: Vec<ScoreVote>,
+    pub result: Option<HashMap<PollOptionId, Option<f64>>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
@@ -46,7 +52,8 @@ pub struct PollOption {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ScoreVote {
     pub user_id: PublicUserId,
-    pub votes: HashMap<PollOptionId, f64>,
+    pub user_name: String,
+    pub votes: HashMap<PollOptionId, Option<f64>>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -75,6 +82,9 @@ where
 
     #[rpc(name = "get_poll")]
     fn get_poll(&self, poll_id: PublicPollId) -> Result<Poll, ErrT>;
+
+    #[rpc(name = "vote")]
+    fn vote(&self, poll_id: PublicPollId, vote: ScoreVote) -> Result<Poll, ErrT>;
 
     /// Performs asynchronous operation
     #[rpc(name = "callAsync")]
